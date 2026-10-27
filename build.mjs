@@ -47,6 +47,7 @@ const SOCIALS = {
 };
 
 const OG_IMAGE = `${CDN_BASE}/img/hero-classe-globe.jpg`;
+const GOOGLE_FONTS = "https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Kumbh+Sans:wght@300;400;500;600&display=swap";
 
 const TRACKING_HEAD = `<!-- Microsoft Clarity -->
 <script type="text/javascript">
@@ -122,14 +123,39 @@ function build(lang) {
   const cfg = LANGS[lang];
   let src = readFileSync(cfg.src, "utf8");
 
-  for (const [local, remote] of Object.entries(ASSETS)) {
+  // Fonts: serve WOFF2 first, WOFF as fallback (drop the TTF).
+  src = src.replace(
+    /url\('uploads\/(HarriText-[A-Za-z]+)\.woff'\) format\('woff'\),url\('uploads\/\1\.ttf'\) format\('truetype'\)/g,
+    "url('uploads/$1.woff2') format('woff2'),url('uploads/$1.woff') format('woff')"
+  );
+  for (const [local, { remote }] of Object.entries(ASSETS)) {
     src = src.split(`uploads/${local}`).join(`${CDN_BASE}/${remote}`);
   }
   const leftover = src.match(/uploads\/[^"')]+/);
   if (leftover) throw new Error(`build: asset not mapped in scripts/assets.mjs: ${leftover[0]}`);
 
-  const headExtra = between(src, "<helmet data-dc-atomics>", "</helmet>");
+  let headExtra = between(src, "<helmet data-dc-atomics>", "</helmet>");
   let body = between(src, "</template>", "</x-dc>");
+
+  // Google Fonts: only the weights the page uses, loaded without blocking render.
+  const gfOld = headExtra.match(/<link href="https:\/\/fonts\.googleapis\.com\/css2[^"]*" rel="stylesheet">/);
+  if (!gfOld) throw new Error("build: Google Fonts link not found");
+  headExtra = headExtra.replace(gfOld[0], `<link rel="preload" as="style" href="${GOOGLE_FONTS}">
+<link rel="stylesheet" href="${GOOGLE_FONTS}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="${GOOGLE_FONTS}"></noscript>`);
+
+  // Images: the header logo and hero photo load first, everything else lazily.
+  let imgIndex = 0;
+  body = body.replace(/<img /g, () => {
+    const i = imgIndex++;
+    if (i === 0) return '<img decoding="async" ';
+    if (i === 1) return '<img fetchpriority="high" decoding="async" ';
+    return '<img loading="lazy" decoding="async" ';
+  });
+
+  // The popup used to float forever (constant repaints while scrolling); keep it still.
+  body = replaceOnce(body, ";animation:floaty 7s ease-in-out infinite", "");
+  body = replaceOnce(body, "animation:floaty 6s ease-in-out infinite", "animation:floaty 6s ease-in-out infinite;will-change:transform");
 
   body = replaceOnce(body, cfg.switchFrom, cfg.switchTo);
   body = replaceOnce(body, '<sc-if value="{{ showPopup }}" hint-placeholder-val="{{ false }}">', '<div id="dc-popup" hidden>');
@@ -175,6 +201,7 @@ ${TRACKING_HEAD}
 <meta property="og:image:alt" content="${cfg.ogImageAlt}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://adfinitas.b-cdn.net" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="${CDN_BASE}/fonts/HarriText-Bold.woff2" crossorigin>
 ${headExtra.trim()}
 <style>[hidden]{display:none!important}</style>
 </head>

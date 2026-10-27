@@ -11,12 +11,12 @@ const env = Object.fromEntries(
 );
 const host = env.BUNNY_STORAGE_REGION ? `${env.BUNNY_STORAGE_REGION}.storage.bunnycdn.com` : "storage.bunnycdn.com";
 
-for (const [local, remote] of Object.entries(ASSETS)) {
+for (const { file, remote } of Object.values(ASSETS)) {
   const url = `https://${host}/${env.BUNNY_STORAGE_ZONE}/${BUNNY_DIR}/${remote}`;
   const res = await fetch(url, {
     method: "PUT",
     headers: { AccessKey: env.BUNNY_STORAGE_PASSWORD, "Content-Type": "application/octet-stream" },
-    body: readFileSync(`uploads/${local}`),
+    body: readFileSync(`uploads/${file}`),
   });
   console.log(res.ok ? "ok  " : `FAIL ${res.status}`, remote);
   if (!res.ok) process.exitCode = 1;
