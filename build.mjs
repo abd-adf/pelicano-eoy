@@ -31,6 +31,19 @@ const LANGS = {
   },
 };
 
+// iRaiser donation form, one URL per language.
+LANGS.nl.donateUrl = "https://donate.pelicano.be/PROSP_ADF/~mijn-donatie";
+LANGS.fr.donateUrl = "https://donate.pelicano.be/PROSP_ADF/~mon-don";
+// "Discover the Foundation" link: URL not provided yet, left as "#".
+LANGS.nl.foundationText = "Ontdek de Stichting";
+LANGS.fr.foundationText = "Découvrir la Fondation";
+
+// Socials as listed on pelicano.be (no LinkedIn account there, so that icon is dropped).
+const SOCIALS = {
+  Facebook: "https://www.facebook.com/pelicano.be/",
+  Instagram: "https://www.instagram.com/pelicano.be/",
+};
+
 const OG_IMAGE = `${CDN_BASE}/img/hero-classe-globe.jpg`;
 
 const TRACKING_HEAD = `<!-- Microsoft Clarity -->
@@ -122,6 +135,22 @@ function build(lang) {
   body = replaceOnce(body, "{{ countText }}", '<span id="dc-count">—</span>');
   body = replaceOnce(body, 'onClick="{{ dismiss }}"', 'id="dc-dismiss" type="button"');
   if (body.includes("{{")) throw new Error(`build: unresolved template expression in ${cfg.src}`);
+
+  for (const [label, url] of Object.entries(SOCIALS)) {
+    body = replaceOnce(body, `<a href="#" aria-label="${label}"`, `<a href="${url}" target="_blank" rel="noopener" aria-label="${label}"`);
+  }
+  const linkedin = body.match(/\s*<a href="#" aria-label="LinkedIn"[\s\S]*?<\/a>/);
+  if (!linkedin) throw new Error("build: LinkedIn icon not found");
+  body = body.replace(linkedin[0], "");
+
+  // Every remaining "#" link is a donation CTA, except the Foundation link.
+  let donateLinks = 0;
+  body = body.replace(/<a href="#"([^>]*)>([^<]*)/g, (m, attrs, text) => {
+    if (text.includes(cfg.foundationText)) return m;
+    donateLinks++;
+    return `<a href="${cfg.donateUrl}"${attrs}>${text}`;
+  });
+  if (donateLinks !== 5) throw new Error(`build: expected 5 donation links, found ${donateLinks} in ${cfg.src}`);
 
   const html = `<!DOCTYPE html>
 <html lang="${lang}">
