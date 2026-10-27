@@ -1,0 +1,9 @@
+.env
+.DS_Store
+dist/
+.netlify/
+node_modules/
+uploads/
+scraps/
+.thumbnail
+.claude/
