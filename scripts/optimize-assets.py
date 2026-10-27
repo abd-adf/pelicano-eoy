@@ -2,7 +2,7 @@
 Usage: python scripts/optimize-assets.py   (needs: pillow, fonttools, brotli)"""
 from pathlib import Path
 from PIL import Image
-from fontTools.ttLib import TTFont
+from fontTools import subset
 
 SRC = Path("uploads")
 OUT = SRC / "optimized"
@@ -33,8 +33,9 @@ for src, (name, max_w, q) in IMAGES.items():
     im.save(OUT / name, "WEBP", quality=q, method=6)
     print(f"{name:40} {im.width}x{im.height} {(OUT / name).stat().st_size // 1024} KB")
 
+# Latin subset (FR/NL accents, €, typographic punctuation, arrows, ×) — ~4× smaller than the full fonts.
+UNICODES = "U+0020-007E,U+00A0-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2190-21FF,U+2212"
 for font in ["HarriText-Bold", "HarriText-ExtraBold", "HarriText-BoldItalic"]:
-    f = TTFont(SRC / f"{font}.ttf")
-    f.flavor = "woff2"
-    f.save(OUT / f"{font}.woff2")
-    print(f"{font}.woff2 {(OUT / f'{font}.woff2').stat().st_size // 1024} KB")
+    out = OUT / f"{font}.woff2"
+    subset.main([str(SRC / f"{font}.ttf"), f"--unicodes={UNICODES}", "--flavor=woff2", "--layout-features=*", f"--output-file={out}"])
+    print(f"{font}.woff2 {out.stat().st_size // 1024} KB")
