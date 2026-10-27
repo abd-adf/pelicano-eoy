@@ -34,9 +34,11 @@ const LANGS = {
 // iRaiser donation form, one URL per language.
 LANGS.nl.donateUrl = "https://donate.pelicano.be/PROSP_ADF/~mijn-donatie";
 LANGS.fr.donateUrl = "https://donate.pelicano.be/PROSP_ADF/~mon-don";
-// "Discover the Foundation" link: URL not provided yet, left as "#".
+// "Discover the Foundation" link (site root is FR, /nl/ is NL).
 LANGS.nl.foundationText = "Ontdek de Stichting";
 LANGS.fr.foundationText = "Découvrir la Fondation";
+LANGS.nl.foundationUrl = "https://sk-fr-paola.be/nl/";
+LANGS.fr.foundationUrl = "https://sk-fr-paola.be/";
 
 // Socials as listed on pelicano.be (no LinkedIn account there, so that icon is dropped).
 const SOCIALS = {
@@ -146,7 +148,7 @@ function build(lang) {
   // Every remaining "#" link is a donation CTA, except the Foundation link.
   let donateLinks = 0;
   body = body.replace(/<a href="#"([^>]*)>([^<]*)/g, (m, attrs, text) => {
-    if (text.includes(cfg.foundationText)) return m;
+    if (text.includes(cfg.foundationText)) return `<a href="${cfg.foundationUrl}" target="_blank" rel="noopener"${attrs}>${text}`;
     donateLinks++;
     return `<a href="${cfg.donateUrl}"${attrs}>${text}`;
   });
