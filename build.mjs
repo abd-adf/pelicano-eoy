@@ -209,6 +209,9 @@ ${TRACKING_HEAD}
 <link rel="preconnect" href="https://adfinitas.b-cdn.net" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="${CDN_BASE}/fonts/HarriText-Bold.woff2" crossorigin>
 ${headExtra.trim()}
+<!-- Hotjar (site 3838599) is injected by the shared GTM container; its survey widget makes
+     scrolling stutter on this LP, so keep it from rendering here. -->
+<style>[id^="hj-survey"]{display:none!important}</style>
 </head>
 <body>
 ${TRACKING_BODY}
