@@ -23,7 +23,7 @@
   @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
   /* vignettes cadeau : cliquables, effet grow */
   .gift-card{text-decoration:none;cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease}
-  .gift-card img{transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+  .gift-card img{transition:transform .6s cubic-bezier(.2,.8,.2,1);object-position:50% 22%}
   .gift-card:hover,.gift-card:focus-visible{transform:translateY(-8px) scale(1.03);box-shadow:0 28px 56px rgba(0,0,0,.38)!important}
   .gift-card:hover img,.gift-card:focus-visible img{transform:scale(1.08)}
   .gift-card:focus-visible{outline:3px solid #f2c16b;outline-offset:5px}
@@ -44,6 +44,19 @@
   html.fx .rv-logo{clip-path:inset(14% 14% 14% 14% round 4px);transform:scale(.94);transition:clip-path 1.1s cubic-bezier(.2,.8,.2,1) .15s,transform 1.1s cubic-bezier(.2,.8,.2,1) .15s}
   html.fx .rv-logo.in{clip-path:inset(0 0 0 0 round 4px);transform:none}
   [data-count]{font-variant-numeric:tabular-nums}
+  /* parcours : badge ~10 ans qui arrive en rebond + ligne et étapes qui se dessinent (actif seulement avec html.fx) */
+  html.fx .pill10{opacity:0;transform:translateY(24px) scale(.55);transition:transform .9s cubic-bezier(.34,1.56,.64,1),opacity .35s ease}
+  html.fx .pill10.in{opacity:1;transform:none}
+  html.fx .pill10-lbl{opacity:0;transform:translateX(-16px);transition:opacity .5s ease .45s,transform .6s cubic-bezier(.2,.8,.2,1) .45s}
+  html.fx .pill10.in .pill10-lbl{opacity:1;transform:none}
+  html.fx .pill10{position:relative}
+  html.fx .pill10::after{content:"";position:absolute;inset:-2px;border-radius:inherit;border:2px solid #f43653;opacity:0;pointer-events:none}
+  html.fx .pill10.in::after{animation:pillRing 1.3s cubic-bezier(.2,.8,.2,1) .75s 1}
+  @keyframes pillRing{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.18,1.55)}}
+  html.fx .journey-line{transform:scaleX(0);transform-origin:left center;transition:transform 1.6s cubic-bezier(.65,0,.35,1) .2s}
+  html.fx .journey-line.in{transform:none}
+  html.fx .step{opacity:0;transform:translateY(26px);transition:opacity .6s ease var(--d,0s),transform .8s cubic-bezier(.34,1.4,.64,1) var(--d,0s)}
+  html.fx .step.in{opacity:1;transform:none}
   /* ---------- responsive (la mise en page est en styles inline : on la surcharge ici) ---------- */
   @media (max-width:960px){
     [style*="grid-template-columns:1.05fr .95fr"],[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;gap:40px!important}
@@ -52,6 +65,7 @@
     [style*="top:26px;left:12%;right:12%"]{display:none!important}
     [style*="min-height:520px"]{min-height:0!important;gap:0!important}
     [style*="min-height:520px"]>div:first-child{min-height:340px}
+    .gift-card>div:first-child{height:auto!important;aspect-ratio:16/10}
     [style*="gap:60px;align-items:center"]>div:last-child{max-width:420px;width:100%;margin:0 auto}
   }
   @media (max-width:640px){
@@ -60,9 +74,10 @@
     header>div:last-child{gap:10px!important;margin-left:auto}
     header>div:last-child a[style*="background:#f43653"]{padding:9px 14px!important;font-size:13px!important;white-space:nowrap}
     [style*="padding:19px 46px"]{padding:16px 32px!important;font-size:19px!important}
-    [style*="bottom:-22px;left:-22px"]{left:12px!important;bottom:-18px!important}
+    [style*="bottom:-34px;left:-30px"]{left:12px!important;bottom:-26px!important;padding:16px 22px!important;gap:14px!important}
     [style*="top:-18px;right:-14px;width:120px"]{width:80px!important;height:80px!important;right:-6px!important}
     [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr!important}
+    html.fx .step{transition-delay:0s!important}
     [style*="grid-template-columns:repeat(3,1fr);gap:30px"]{gap:36px!important}
     [style*="display:inline-flex;align-items:center;gap:18px;background:#fff;border:2px solid #f43653"]{padding:12px 22px 12px 18px!important;gap:12px!important}
     .seam{padding:12px 18px!important;gap:12px!important;top:-38px!important}
@@ -109,9 +124,9 @@
       <div style="position:relative">
         <div style="position:absolute;top:-18px;right:-14px;width:120px;height:120px;background:#2ecddc;border-radius:50%;z-index:0;animation:floaty 6s ease-in-out infinite"></div>
         <div style="position:relative;z-index:1;border-radius:28px;overflow:hidden;aspect-ratio:4/4.4;box-shadow:0 30px 60px rgba(46,42,38,.18)"><img src="uploads/shutterstock_2765383761 (1).jpg" alt="Enfants en classe" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-        <div style="position:absolute;bottom:-22px;left:-22px;z-index:2;background:#fff;border-radius:20px;padding:16px 22px;box-shadow:0 16px 34px rgba(46,42,38,.16);display:flex;align-items:center;gap:14px">
-          <div style="font-family:'HarriText';font-weight:600;font-size:30px;color:#f43653">1 431</div>
-          <div style="font-size:12px;line-height:1.3;color:#6b6157;font-weight:600">enfants<br>accompagnés</div>
+        <div style="position:absolute;bottom:-34px;left:-30px;z-index:2;background:#fff;border-radius:24px;padding:22px 30px;box-shadow:0 20px 44px rgba(46,42,38,.2);display:flex;align-items:center;gap:18px">
+          <div style="font-family:'HarriText';font-weight:700;font-size:clamp(48px,4.4vw,60px);line-height:1;color:#f43653">1 431</div>
+          <div style="font-size:clamp(16px,1.4vw,18px);line-height:1.25;color:#2e2a26;font-weight:600">enfants<br>accompagnés</div>
         </div>
       </div>
     </section>
@@ -252,30 +267,30 @@
         <svg width="46" height="54" viewBox="0 0 46 54" fill="none" stroke="#f43653" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:-40px auto 12px;transform:translateX(-80px)"><path d="M38 3 C 36 22, 22 34, 10 44"></path><path d="M8 32 L 9 46 L 22 44"></path></svg>
         <p style="font-size:18px;line-height:1.6;color:#5a534c;max-width:620px;margin:0 auto 28px;text-wrap:pretty">Votre don rend ces belles histoires possibles. Mais l'accompagnement Pelicano ne s'arrête pas là, et va beaucoup plus loin, dans la durée.</p>
         <h2 style="font-family:'HarriText';font-weight:600;font-size:clamp(26px,3vw,36px);margin:0 0 18px;color:#2e2a26">Le parcours d'un enfant, jusqu'à l'autonomie</h2>
-        <div style="display:inline-flex;align-items:center;gap:18px;background:#fff;border:2px solid #f43653;border-radius:100px;padding:14px 30px 14px 22px;box-shadow:0 12px 30px rgba(234,51,38,.14)">
-          <span style="font-family:'HarriText';font-weight:800;font-size:clamp(46px,6vw,68px);line-height:.9;color:#f43653">~10</span>
-          <span style="text-align:left;font-family:'HarriText';font-weight:700;font-size:clamp(16px,2vw,20px);line-height:1.1;color:#2e2a26">années<br>d'accompagnement</span>
+        <div class="pill10" style="display:inline-flex;align-items:center;gap:18px;background:#fff;border:2px solid #f43653;border-radius:100px;padding:14px 30px 14px 22px;box-shadow:0 12px 30px rgba(234,51,38,.14)">
+          <span style="font-family:'HarriText';font-weight:800;font-size:clamp(46px,6vw,68px);line-height:.9;color:#f43653">~<span data-count="10">10</span></span>
+          <span class="pill10-lbl" style="text-align:left;font-family:'HarriText';font-weight:700;font-size:clamp(16px,2vw,20px);line-height:1.1;color:#2e2a26">années<br>d'accompagnement</span>
         </div>
         <p style="font-size:16px;line-height:1.55;color:#6b6157;max-width:560px;margin:18px auto 0">On ne s'arrête pas à un coup de pouce ponctuel&nbsp;: Pelicano accompagne l'enfant sur le long terme, jusqu'à ce qu'il devienne autonome.</p>
       </div>
       <div style="position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:0">
-        <div style="position:absolute;top:26px;left:12%;right:12%;height:3px;background:linear-gradient(90deg,#f43653,#2ecddc);border-radius:3px;z-index:0"></div>
-        <div style="position:relative;z-index:1;text-align:center;padding:0 14px">
+        <div class="journey-line" style="position:absolute;top:26px;left:12%;right:12%;height:3px;background:linear-gradient(90deg,#f43653,#2ecddc);border-radius:3px;z-index:0"></div>
+        <div class="step" style="--d:0.35s;position:relative;z-index:1;text-align:center;padding:0 14px">
           <div style="width:54px;height:54px;border-radius:50%;background:#f43653;color:#fff;font-family:'HarriText';font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 0 0 6px #fdf6ee">1</div>
           <h4 style="font-family:'HarriText';font-weight:600;font-size:17px;margin:0 0 6px">Détection</h4>
           <p style="font-size:14px;line-height:1.5;color:#6b6157;margin:0">Un partenaire social repère l'enfant et ses besoins réels.</p>
         </div>
-        <div style="position:relative;z-index:1;text-align:center;padding:0 14px">
+        <div class="step" style="--d:0.65s;position:relative;z-index:1;text-align:center;padding:0 14px">
           <div style="width:54px;height:54px;border-radius:50%;background:#5ec9d6;color:#fff;font-family:'HarriText';font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 0 0 6px #fdf6ee">2</div>
           <h4 style="font-family:'HarriText';font-weight:600;font-size:17px;margin:0 0 6px">Accompagnement</h4>
           <p style="font-size:14px;line-height:1.5;color:#6b6157;margin:0">Repas, école, soins, loisirs — un soutien concret, année après année.</p>
         </div>
-        <div style="position:relative;z-index:1;text-align:center;padding:0 14px">
+        <div class="step" style="--d:0.95s;position:relative;z-index:1;text-align:center;padding:0 14px">
           <div style="width:54px;height:54px;border-radius:50%;background:#2ecddc;color:#fff;font-family:'HarriText';font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 0 0 6px #fdf6ee">3</div>
           <h4 style="font-family:'HarriText';font-weight:600;font-size:17px;margin:0 0 6px">Épanouissement</h4>
           <p style="font-size:14px;line-height:1.5;color:#6b6157;margin:0">L'enfant retrouve confiance, se découvre des talents, et se voit offrir l'espace nécessaire pour participer et se projeter dans l'avenir.</p>
         </div>
-        <div style="position:relative;z-index:1;text-align:center;padding:0 14px">
+        <div class="step" style="--d:1.25s;position:relative;z-index:1;text-align:center;padding:0 14px">
           <div style="width:54px;height:54px;border-radius:50%;background:#2e2a26;color:#fff;font-family:'HarriText';font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 0 0 6px #fdf6ee">4</div>
           <h4 style="font-family:'HarriText';font-weight:600;font-size:17px;margin:0 0 6px">Autonomie</h4>
           <p style="font-size:14px;line-height:1.5;color:#6b6157;margin:0">Diplôme ou formation en poche, un jeune adulte construit son avenir.</p>

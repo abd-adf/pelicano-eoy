@@ -114,7 +114,7 @@ const fxScript = `<script>
       if (e.target.hasAttribute('data-count')) count(e.target);
     });
   }, { rootMargin: '0px 0px -12% 0px' });
-  document.querySelectorAll('.seam, .rv, .rv-logo, [data-count]').forEach(function (el) { io.observe(el); });
+  document.querySelectorAll('.seam, .rv, .rv-logo, .pill10, .journey-line, .step, [data-count]').forEach(function (el) { io.observe(el); });
 })();
 </script>`;
 
