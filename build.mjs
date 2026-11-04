@@ -211,7 +211,7 @@ ${TRACKING_HEAD}
 ${headExtra.trim()}
 <!-- Hotjar (site 3838599) is injected by the shared GTM container; its survey widget makes
      scrolling stutter on this LP, so keep it from rendering here. -->
-<style>[id^="hj-survey"]{display:none!important}</style>
+<style>[id^="hj-survey"],[id^="survey_"],[id^="hotjar-survey"],._hj-widget-container{display:none!important}</style>
 </head>
 <body>
 ${TRACKING_BODY}

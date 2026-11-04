@@ -17,6 +17,8 @@
   @font-face{font-family:'HarriText';src:url('uploads/HarriText-BoldItalic.woff') format('woff'),url('uploads/HarriText-BoldItalic.ttf') format('truetype');font-weight:100 700;font-style:italic;font-display:swap}
   *{box-sizing:border-box}
   body{margin:0}
+  /* pas de rebond élastique (trackpad Mac) : il bloque le défilement quand on repart vers le bas depuis le haut */
+  html,body{overscroll-behavior-y:none}
   a{color:inherit}
   @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
   /* vignettes cadeau : cliquables, effet grow */
