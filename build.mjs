@@ -2,7 +2,7 @@
 //   dist/index.html     → NL (default) from "Dream Pelicano NL.dc.html"
 //   dist/fr/index.html  → FR from "Dream Pelicano FR.dc.html"
 // The Claude Design exports (.dc.html) are flattened to plain HTML: no support.js / React / Babel,
-// the donor-counter popup is re-implemented in vanilla JS, and uploads/* point to Bunny CDN.
+// and uploads/* point to Bunny CDN.
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync } from "node:fs";
 import { ASSETS, CDN_BASE } from "./scripts/assets.mjs";
 
@@ -84,25 +84,37 @@ const TRACKING_BODY = `<!-- Google Tag Manager (noscript) -->
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->`;
 
-// Vanilla port of the DCLogic component from the .dc.html files.
-const popupScript = (locale) => `<script>
+// Scroll-in effects for the Fondation block (CSS lives in the .dc.html <style>, gated on html.fx
+// so the page stays fully visible without JS or with reduced motion).
+const fxScript = `<script>
 (function () {
-  var popup = document.getElementById('dc-popup');
-  var countEl = document.getElementById('dc-count');
-  var now = new Date();
-  // seed grows through the winter: start Nov 1, ~34 donateurs/jour + slow intra-day drift
-  var start = new Date(now.getFullYear(), 10, 1);
-  var days = Math.max(0, Math.floor((now - start) / 86400000));
-  if (days > 150) days = days % 150; // wrap after the campaign window
-  var drift = Math.floor((now.getHours() * 60 + now.getMinutes()) / 8);
-  var count = 1287 + days * 34 + drift;
-  function render() { countEl.textContent = count.toLocaleString('${locale}'); }
-  render();
-  var t = setTimeout(function () { popup.hidden = false; }, 3500);
-  var i = setInterval(function () { if (Math.random() < 0.55) { count++; render(); } }, 9000);
-  document.getElementById('dc-dismiss').addEventListener('click', function () {
-    clearTimeout(t); clearInterval(i); popup.hidden = true;
-  });
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.documentElement.classList.add('fx');
+  function fmt(v, dec, suf) {
+    var p = v.toFixed(dec).split('.');
+    p[0] = p[0].replace(/\\B(?=(\\d{3})+(?!\\d))/g, ' ');
+    return p.join(',') + suf;
+  }
+  function count(el) {
+    var final = el.textContent, to = parseFloat(el.getAttribute('data-count')),
+        dec = +(el.getAttribute('data-dec') || 0), suf = el.getAttribute('data-suffix') || '', t0 = null;
+    function step(t) {
+      if (t0 === null) t0 = t;
+      var k = Math.min(1, (t - t0) / 1600);
+      el.textContent = k < 1 ? fmt(to * (1 - Math.pow(1 - k, 3)), dec, suf) : final;
+      if (k < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+      if (e.target.hasAttribute('data-count')) count(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px' });
+  document.querySelectorAll('.seam, .rv, .rv-logo, [data-count]').forEach(function (el) { io.observe(el); });
 })();
 </script>`;
 
@@ -153,15 +165,9 @@ function build(lang) {
     return '<img loading="lazy" decoding="async" ';
   });
 
-  // The popup used to float forever (constant repaints while scrolling); keep it still.
-  body = replaceOnce(body, ";animation:floaty 7s ease-in-out infinite", "");
   body = replaceOnce(body, "animation:floaty 6s ease-in-out infinite", "animation:floaty 6s ease-in-out infinite;will-change:transform");
 
   body = replaceOnce(body, cfg.switchFrom, cfg.switchTo);
-  body = replaceOnce(body, '<sc-if value="{{ showPopup }}" hint-placeholder-val="{{ false }}">', '<div id="dc-popup" hidden>');
-  body = replaceOnce(body, "</sc-if>", "</div>");
-  body = replaceOnce(body, "{{ countText }}", '<span id="dc-count">—</span>');
-  body = replaceOnce(body, 'onClick="{{ dismiss }}"', 'id="dc-dismiss" type="button"');
   if (body.includes("{{")) throw new Error(`build: unresolved template expression in ${cfg.src}`);
 
   for (const [label, url] of Object.entries(SOCIALS)) {
@@ -178,7 +184,7 @@ function build(lang) {
     donateLinks++;
     return `<a href="${cfg.donateUrl}"${attrs}>${text}`;
   });
-  if (donateLinks !== 5) throw new Error(`build: expected 5 donation links, found ${donateLinks} in ${cfg.src}`);
+  if (donateLinks !== 7) throw new Error(`build: expected 7 donation links, found ${donateLinks} in ${cfg.src}`);
 
   const html = `<!DOCTYPE html>
 <html lang="${lang}">
@@ -203,12 +209,11 @@ ${TRACKING_HEAD}
 <link rel="preconnect" href="https://adfinitas.b-cdn.net" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="${CDN_BASE}/fonts/HarriText-Bold.woff2" crossorigin>
 ${headExtra.trim()}
-<style>[hidden]{display:none!important}</style>
 </head>
 <body>
 ${TRACKING_BODY}
 ${body.trim()}
-${popupScript(cfg.locale)}
+${fxScript}
 </body>
 </html>
 `;

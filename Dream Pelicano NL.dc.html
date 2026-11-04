@@ -19,6 +19,60 @@
   body{margin:0}
   a{color:inherit}
   @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  /* vignettes cadeau : cliquables, effet grow */
+  .gift-card{text-decoration:none;cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease}
+  .gift-card img{transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+  .gift-card:hover,.gift-card:focus-visible{transform:translateY(-8px) scale(1.03);box-shadow:0 28px 56px rgba(0,0,0,.38)!important}
+  .gift-card:hover img,.gift-card:focus-visible img{transform:scale(1.08)}
+  .gift-card:focus-visible{outline:3px solid #f2c16b;outline-offset:5px}
+  .gift-cta{align-self:flex-start;margin-top:auto;display:inline-flex;align-items:center;gap:8px;background:#fff;color:#2e2a26;font-family:'HarriText';font-weight:600;font-size:15px;padding:10px 20px;border-radius:100px;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+  .gift-cta span{display:inline-block;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+  .gift-card:hover .gift-cta span,.gift-card:focus-visible .gift-cta span{transform:translateX(5px)}
+  /* Fondation : fusion de la pastille + apparitions decalees (actif seulement si le JS ajoute html.fx) */
+  html.fx .seam{opacity:0;transition:opacity .5s ease}
+  html.fx .seam.in{opacity:1}
+  html.fx .seam-a,html.fx .seam-b{opacity:0;transition:transform .9s cubic-bezier(.2,.8,.2,1) .1s,opacity .6s ease .1s}
+  html.fx .seam-a{transform:translateX(-60px)}
+  html.fx .seam-b{transform:translateX(60px)}
+  html.fx .seam-div{transform:scaleY(0);transition:transform .5s cubic-bezier(.2,.8,.2,1) .75s}
+  html.fx .seam.in .seam-a,html.fx .seam.in .seam-b{opacity:1;transform:none}
+  html.fx .seam.in .seam-div{transform:none}
+  html.fx .rv{opacity:0;transform:translateY(32px);transition:opacity .8s cubic-bezier(.2,.8,.2,1) var(--d,0s),transform .9s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
+  html.fx .rv.in{opacity:1;transform:none}
+  html.fx .rv-logo{clip-path:inset(14% 14% 14% 14% round 4px);transform:scale(.94);transition:clip-path 1.1s cubic-bezier(.2,.8,.2,1) .15s,transform 1.1s cubic-bezier(.2,.8,.2,1) .15s}
+  html.fx .rv-logo.in{clip-path:inset(0 0 0 0 round 4px);transform:none}
+  [data-count]{font-variant-numeric:tabular-nums}
+  /* ---------- responsive (la mise en page est en styles inline : on la surcharge ici) ---------- */
+  @media (max-width:960px){
+    [style*="grid-template-columns:1.05fr .95fr"],[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;gap:40px!important}
+    [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr!important;max-width:520px;margin-left:auto;margin-right:auto}
+    [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr)!important;row-gap:36px!important}
+    [style*="top:26px;left:12%;right:12%"]{display:none!important}
+    [style*="min-height:520px"]{min-height:0!important;gap:0!important}
+    [style*="min-height:520px"]>div:first-child{min-height:340px}
+    [style*="gap:60px;align-items:center"]>div:last-child{max-width:420px;width:100%;margin:0 auto}
+  }
+  @media (max-width:640px){
+    header[style]{padding:12px 16px!important;gap:10px;flex-wrap:wrap}
+    header img[style*="height:110px"]{height:44px!important}
+    header>div:last-child{gap:10px!important;margin-left:auto}
+    header>div:last-child a[style*="background:#f43653"]{padding:9px 14px!important;font-size:13px!important;white-space:nowrap}
+    [style*="padding:19px 46px"]{padding:16px 32px!important;font-size:19px!important}
+    [style*="bottom:-22px;left:-22px"]{left:12px!important;bottom:-18px!important}
+    [style*="top:-18px;right:-14px;width:120px"]{width:80px!important;height:80px!important;right:-6px!important}
+    [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr!important}
+    [style*="grid-template-columns:repeat(3,1fr);gap:30px"]{gap:36px!important}
+    [style*="display:inline-flex;align-items:center;gap:18px;background:#fff;border:2px solid #f43653"]{padding:12px 22px 12px 18px!important;gap:12px!important}
+    .seam{padding:12px 18px!important;gap:12px!important;top:-38px!important}
+    .seam span[style*="font-size:19px"]{font-size:15px!important}
+    .seam-div{height:20px!important}
+    [style*="padding:150px clamp(24px,5vw,72px) 90px"]{padding-top:110px!important}
+    .gift-card [style*="padding:30px 30px 34px"]{padding:24px 22px 26px!important}
+    .gift-card [style*="font-size:56px"]{font-size:46px!important}
+    footer[style]{flex-direction:column;align-items:flex-start!important}
+    footer>div{flex-wrap:wrap;gap:14px!important}
+    img[style*="height:150px;width:auto"]{height:110px!important}
+  }
 </style>
 </helmet>
 
@@ -116,30 +170,33 @@
           <p style="font-size:15px;line-height:1.5;color:#a9c2b3;margin:16px 0 0">In 2025 vertegenwoordigt de steun van Pelicano gemiddeld <strong style="color:#f2c16b;font-weight:700">€ 763 aan rechtstreekse hulp per kind</strong>.</p>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
-          <div style="border-radius:24px;overflow:hidden;background:#2ecddc;color:#fff;display:flex;flex-direction:column;box-shadow:0 16px 38px rgba(31,183,204,.24)">
+          <a href="#" class="gift-card" style="border-radius:24px;overflow:hidden;background:#2ecddc;color:#fff;display:flex;flex-direction:column;box-shadow:0 16px 38px rgba(31,183,204,.24)">
             <div style="position:relative;height:190px;overflow:hidden"><img src="uploads/shutterstock_2758910499.jpg" alt="Kind bij een sportclub" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-            <div style="padding:30px 30px 34px">
+            <div style="padding:30px 30px 34px;display:flex;flex-direction:column;flex:1">
               <span style="display:inline-block;font-family:'HarriText';font-weight:600;font-size:12px;letter-spacing:.4px;background:rgba(255,255,255,.18);border:1px dashed rgba(255,255,255,.55);border-radius:100px;padding:5px 12px;margin-bottom:14px">Met Kerst, geef een jaarlijks lidgeld bij een sportclub</span>
               <div style="font-family:'HarriText';font-weight:700;font-size:56px;line-height:1">60€</div>
-              <p style="font-size:16px;line-height:1.55;margin:12px 0 0">betaalt de helft van het jaarlijkse lidgeld bij een sportclub. Zo staat een kind mee op het veld, in plaats van aan de zijlijn.</p>
+              <p style="font-size:16px;line-height:1.55;margin:12px 0 24px">betaalt de helft van het jaarlijkse lidgeld bij een sportclub. Zo staat een kind mee op het veld, in plaats van aan de zijlijn.</p>
+              <span class="gift-cta">Ik geef € 60 <span>→</span></span>
             </div>
-          </div>
-          <div style="border-radius:24px;overflow:hidden;background:#c98f2b;color:#fff;display:flex;flex-direction:column;box-shadow:0 16px 38px rgba(201,143,43,.28)">
+          </a>
+          <a href="#" class="gift-card" style="border-radius:24px;overflow:hidden;background:#c98f2b;color:#fff;display:flex;flex-direction:column;box-shadow:0 16px 38px rgba(201,143,43,.28)">
             <div style="height:190px;overflow:hidden"><img src="uploads/shutterstock_573089722.jpg" alt="Schoolmaaltijd" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-            <div style="padding:30px 30px 34px">
+            <div style="padding:30px 30px 34px;display:flex;flex-direction:column;flex:1">
               <span style="display:inline-block;font-family:'HarriText';font-weight:600;font-size:12px;letter-spacing:.4px;background:rgba(255,255,255,.18);border:1px dashed rgba(255,255,255,.55);border-radius:100px;padding:5px 12px;margin-bottom:14px">Met Kerst, schenk warme maaltijden op school</span>
               <div style="font-family:'HarriText';font-weight:700;font-size:56px;line-height:1">100€</div>
-              <p style="font-size:16px;line-height:1.55;margin:12px 0 0;opacity:.94">betaalt de schoolmaaltijden van een kind voor een volledig trimester. Elke middag een warme maaltijd om te groeien en zich te concentreren in de klas.</p>
+              <p style="font-size:16px;line-height:1.55;margin:12px 0 24px;opacity:.94">betaalt de schoolmaaltijden van een kind voor een volledig trimester. Elke middag een warme maaltijd om te groeien en zich te concentreren in de klas.</p>
+              <span class="gift-cta">Ik geef € 100 <span>→</span></span>
             </div>
-          </div>
-          <div style="border-radius:24px;overflow:hidden;background:#f43653;color:#fff;display:flex;flex-direction:column;box-shadow:0 16px 38px rgba(234,51,38,.22)">
+          </a>
+          <a href="#" class="gift-card" style="border-radius:24px;overflow:hidden;background:#f43653;color:#fff;display:flex;flex-direction:column;box-shadow:0 16px 38px rgba(234,51,38,.22)">
             <div style="height:190px;overflow:hidden"><img src="uploads/boite_a_tartine.webp" alt="Boîte à tartines" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-            <div style="padding:30px 30px 34px">
+            <div style="padding:30px 30px 34px;display:flex;flex-direction:column;flex:1">
               <span style="display:inline-block;font-family:'HarriText';font-weight:600;font-size:12px;letter-spacing:.4px;background:rgba(255,255,255,.18);border:1px dashed rgba(255,255,255,.55);border-radius:100px;padding:5px 12px;margin-bottom:14px">Met Kerst, geef een volledig schooljaar materiaal</span>
               <div style="font-family:'HarriText';font-weight:700;font-size:56px;line-height:1">150€</div>
-              <p style="font-size:16px;line-height:1.55;margin:12px 0 0;opacity:.96">geeft een kind al het nodige schoolmateriaal voor een volledig schooljaar: een schoolagenda, pennen, een pennenzak en een degelijke boekentas.</p>
+              <p style="font-size:16px;line-height:1.55;margin:12px 0 24px;opacity:.96">geeft een kind al het nodige schoolmateriaal voor een volledig schooljaar: een schoolagenda, pennen, een pennenzak en een degelijke boekentas.</p>
+              <span class="gift-cta">Ik geef € 150 <span>→</span></span>
             </div>
-          </div>
+          </a>
         </div>
         <div style="text-align:center;margin-top:44px">
           <a href="#" style="text-decoration:none;background:#f43653;color:#fff;font-family:'HarriText';font-weight:500;font-size:18px;padding:16px 40px;border-radius:100px;box-shadow:0 10px 26px rgba(234,51,38,.35);display:inline-block">Ik kies een ander bedrag</a>
@@ -228,10 +285,10 @@
 
   <!-- ============ TRANSITION SEAM ============ -->
   <div style="position:relative;max-width:1240px;margin:0 auto;padding:0 clamp(24px,5vw,72px);z-index:5;height:0">
-    <div style="position:absolute;left:50%;top:-46px;transform:translateX(-50%);background:#fff;border-radius:100px;padding:16px 30px;box-shadow:0 16px 40px rgba(41,51,74,.28);display:flex;align-items:center;gap:18px;white-space:nowrap">
-      <span style="font-family:'HarriText';font-weight:600;font-size:19px;color:#f43653">pelicano</span>
-      <span style="width:1px;height:26px;background:#e4ddd3"></span>
-      <span style="font-family:'Kumbh Sans';font-weight:600;font-size:19px;color:#29334a;letter-spacing:.3px">Stichting Koningin Paola</span>
+    <div class="seam" style="position:absolute;left:50%;top:-46px;transform:translateX(-50%);background:#fff;border-radius:100px;padding:16px 30px;box-shadow:0 16px 40px rgba(41,51,74,.28);display:flex;align-items:center;gap:18px;white-space:nowrap">
+      <span class="seam-a" style="font-family:'HarriText';font-weight:600;font-size:19px;color:#f43653">pelicano</span>
+      <span class="seam-div" style="width:1px;height:26px;background:#e4ddd3"></span>
+      <span class="seam-b" style="font-family:'Kumbh Sans';font-weight:600;font-size:19px;color:#29334a;letter-spacing:.3px">Stichting Koningin Paola</span>
     </div>
   </div>
 
@@ -242,12 +299,12 @@
     <section style="max-width:1180px;margin:0 auto">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
         <div>
-          <h2 style="font-family:'Kumbh Sans';font-weight:600;font-size:clamp(32px,4.2vw,52px);line-height:1.12;margin:18px 0 22px;color:#f4f1fb">Pelicano sluit zich aan bij de Koningin Paolastichting.</h2>
-          <p style="font-family:'Kumbh Sans';font-weight:300;font-size:18px;line-height:1.65;color:#c9cede;margin:0 0 30px;max-width:480px">Sinds april 2025 vormen Pelicano en de Stichting Koningin Paola één organisatie, een primeur in de Belgische filantropie. Pelicano is vandaag het kinderarmoedeprogramma van de Stichting. Dezelfde begeleiding, dezelfde zorgpartners, meer slagkracht.</p>
-          <a href="#" style="text-decoration:none;display:inline-flex;align-items:center;gap:10px;border:1px solid #c1a7e2;color:#d8c8ef;font-family:'Kumbh Sans';font-weight:400;font-size:15px;letter-spacing:.5px;padding:14px 30px;border-radius:2px">Ontdek de Stichting →</a>
+          <h2 class="rv" style="font-family:'Kumbh Sans';font-weight:600;font-size:clamp(32px,4.2vw,52px);line-height:1.12;margin:18px 0 22px;color:#f4f1fb">Pelicano sluit zich aan bij de Koningin Paolastichting.</h2>
+          <p class="rv" style="--d:.12s;font-family:'Kumbh Sans';font-weight:300;font-size:18px;line-height:1.65;color:#c9cede;margin:0 0 30px;max-width:480px">Sinds april 2025 vormen Pelicano en de Stichting Koningin Paola één organisatie, een primeur in de Belgische filantropie. Pelicano is vandaag het kinderarmoedeprogramma van de Stichting. Dezelfde begeleiding, dezelfde zorgpartners, meer slagkracht.</p>
+          <a href="#" class="rv" style="--d:.24s;text-decoration:none;display:inline-flex;align-items:center;gap:10px;border:1px solid #c1a7e2;color:#d8c8ef;font-family:'Kumbh Sans';font-weight:400;font-size:15px;letter-spacing:.5px;padding:14px 30px;border-radius:2px">Ontdek de Stichting →</a>
         </div>
         <div style="position:relative">
-          <div style="border-radius:4px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 24px 50px rgba(0,0,0,.35);background:#29334a;display:flex;align-items:center;justify-content:center;padding:40px">
+          <div class="rv-logo" style="border-radius:4px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 24px 50px rgba(0,0,0,.35);background:#29334a;display:flex;align-items:center;justify-content:center;padding:40px">
             <img src="uploads/Fondation-Reine-Paola_logo-NL.png" alt="Stichting Koningin Paola" style="width:100%;max-width:320px;height:auto;display:block">
           </div>
         </div>
@@ -257,16 +314,16 @@
       <div style="margin-top:80px;padding-top:56px;border-top:1px solid rgba(193,167,226,.28)">
         <p style="font-family:'Kumbh Sans';font-weight:600;font-size:13px;letter-spacing:2.5px;color:#c1a7e2;text-transform:uppercase;text-align:center;margin:0 0 36px">Onze impact in 2025 · alle programma's samen</p>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:30px;text-align:center">
-          <div>
-            <div style="font-family:'Kumbh Sans';font-weight:500;font-size:clamp(38px,4vw,54px);color:#c1a7e2;line-height:1">1,5 M€</div>
+          <div class="rv">
+            <div style="font-family:'Kumbh Sans';font-weight:500;font-size:clamp(38px,4vw,54px);color:#c1a7e2;line-height:1" data-count="1.5" data-dec="1" data-suffix=" M€">1,5 M€</div>
             <p style="font-family:'Kumbh Sans';font-weight:300;font-size:14px;color:#c9cede;margin:6px 0 0;letter-spacing:.5px">aan directe hulp uitgekeerd</p>
           </div>
-          <div>
-            <div style="font-family:'Kumbh Sans';font-weight:500;font-size:clamp(38px,4vw,54px);color:#c1a7e2;line-height:1">27 882</div>
+          <div class="rv" style="--d:.12s">
+            <div style="font-family:'Kumbh Sans';font-weight:500;font-size:clamp(38px,4vw,54px);color:#c1a7e2;line-height:1" data-count="27882">27 882</div>
             <p style="font-family:'Kumbh Sans';font-weight:300;font-size:14px;color:#c9cede;margin:6px 0 0;letter-spacing:.5px">jongeren geholpen</p>
           </div>
-          <div>
-            <div style="font-family:'Kumbh Sans';font-weight:500;font-size:clamp(38px,4vw,54px);color:#c1a7e2;line-height:1">64</div>
+          <div class="rv" style="--d:.24s">
+            <div style="font-family:'Kumbh Sans';font-weight:500;font-size:clamp(38px,4vw,54px);color:#c1a7e2;line-height:1" data-count="64">64</div>
             <p style="font-family:'Kumbh Sans';font-weight:300;font-size:14px;color:#c9cede;margin:6px 0 0;letter-spacing:.5px">verenigingen financieel gesteund</p>
           </div>
         </div>
@@ -297,21 +354,6 @@
     </footer>
   </div>
 
-  <!-- urgence popup -->
-  <sc-if value="{{ showPopup }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;left:22px;bottom:22px;z-index:80;width:330px;max-width:calc(100vw - 44px);background:#fff;border-radius:18px;box-shadow:0 20px 48px rgba(46,42,38,.24);padding:16px 16px 16px 18px;display:flex;gap:13px;align-items:flex-start;font-family:'Poppins',system-ui,sans-serif;animation:floaty 7s ease-in-out infinite">
-      <div style="position:relative;width:44px;height:44px;border-radius:50%;background:#fdeae8;flex:none;display:flex;align-items:center;justify-content:center">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="#f43653"><path d="M12 21s-7-4.6-9.3-9A5.2 5.2 0 0 1 12 6a5.2 5.2 0 0 1 9.3 6c-2.3 4.4-9.3 9-9.3 9Z"/></svg>
-        <span style="position:absolute;top:-1px;right:-1px;width:11px;height:11px;border-radius:50%;background:#2ecddc;border:2px solid #fff"></span>
-      </div>
-      <div style="flex:1;min-width:0">
-        <p style="margin:0 0 8px;font-size:13.5px;line-height:1.45;color:#2e2a26">Deze winter steunden al <strong style="font-family:'HarriText';font-weight:700;color:#f43653">{{ countText }}</strong> gevers ons.</p>
-        <a href="#" style="display:inline-block;text-decoration:none;background:#f43653;color:#fff;font-family:'HarriText';font-weight:500;font-size:13.5px;padding:8px 18px;border-radius:100px">Doe nu een gift →</a>
-      </div>
-      <button onClick="{{ dismiss }}" aria-label="Fermer" style="flex:none;border:none;background:transparent;color:#b7ad9f;font-size:20px;line-height:1;cursor:pointer;padding:2px 4px">×</button>
-    </div>
-  </sc-if>
-
   <!-- disclaimer photos -->
   <div style="background:#fdf6ee;padding:18px 24px;text-align:center">
     <p style="font-size:12.5px;line-height:1.5;color:#9a8f83;margin:0;max-width:720px;margin:0 auto">De foto's op deze pagina zijn illustratief. Om de anonimiteit van de ondersteunde kinderen te beschermen, kiest Pelicano ervoor om beeldbankfoto's te gebruiken.</p>
@@ -326,29 +368,6 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { count: null, show: false };
-  componentDidMount() {
-    const now = new Date();
-    // seed grows through the winter: start Nov 1, ~34 donateurs/jour + slow intra-day drift
-    const start = new Date(now.getFullYear(), 10, 1);
-    let days = Math.max(0, Math.floor((now - start) / 86400000));
-    if (days > 150) days = days % 150; // wrap after the campaign window
-    const drift = Math.floor((now.getHours() * 60 + now.getMinutes()) / 8);
-    this.setState({ count: 1287 + days * 34 + drift });
-    this._t = setTimeout(() => this.setState({ show: true }), 3500);
-    this._i = setInterval(() => this.setState(s => ({
-      count: s.count == null ? null : s.count + (Math.random() < 0.55 ? 1 : 0)
-    })), 9000);
-  }
-  componentWillUnmount() { clearTimeout(this._t); clearInterval(this._i); }
-  renderVals() {
-    const n = this.state.count;
-    return {
-      showPopup: this.state.show,
-      countText: n == null ? '—' : n.toLocaleString('nl-BE'),
-      dismiss: () => { clearInterval(this._i); this.setState({ show: false }); }
-    };
-  }
 }
 </script>
 </body>
