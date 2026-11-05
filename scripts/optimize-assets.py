@@ -12,7 +12,7 @@ OUT.mkdir(exist_ok=True)
 IMAGES = {
     # Licensed 1000px files only — the 1500px "stock-photo-*" files in uploads/ are watermarked previews.
     "shutterstock_2765383761 (1).jpg": ("hero-classe-globe.webp", 1000, 76),
-    "shutterstock_2745758871 (2).jpg": ("portrait-noor.webp", 1000, 76),
+    "shutterstock_2745758871-hd.jpg": ("portrait-noor-hd.webp", 2800, 74),  # licensed full-size file (7952px)
     "shutterstock_2758910499.jpg": ("sport.webp", 760, 72),
     "shutterstock_573089722.jpg": ("repas-ecole.webp", 760, 72),
     "boite_a_tartine.webp": ("boite-a-tartines.webp", 760, 72),

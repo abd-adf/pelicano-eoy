@@ -21,5 +21,5 @@ export const ASSETS = {
   "shutterstock_2758910499.jpg": { file: "optimized/sport.webp", remote: "img/sport.webp" },
   "shutterstock_573089722.jpg": { file: "optimized/repas-ecole.webp", remote: "img/repas-ecole.webp" },
   "boite_a_tartine.webp": { file: "optimized/boite-a-tartines.webp", remote: "img/boite-a-tartines.webp" },
-  "shutterstock_2745758871 (2).jpg": { file: "optimized/portrait-noor.webp", remote: "img/portrait-noor.webp" },
+  "shutterstock_2745758871 (2).jpg": { file: "optimized/portrait-noor-hd.webp", remote: "img/portrait-noor-hd.webp" },
 };
